@@ -3,9 +3,11 @@ const express = require('express');
 // const connectDb = require('./utils/db');
 const router = require('./router/auth-router');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const app = express();
 const PORT = 5000;
+app.use(cors());
 mongoose
   .connect(
     'mongodb+srv://swativaidya55:teenu1234@cluster0.cdd9v5e.mongodb.net/Gamified_Decision?retryWrites=true&w=majority&appName=Cluster0',
