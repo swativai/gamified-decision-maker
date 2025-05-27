@@ -8,6 +8,9 @@ const cors = require('cors');
 const app = express();
 const PORT = 5000;
 app.use(cors());
+
+//mongoDb database URL- mongodb+srv://swativaidya55:teenu1234@cluster0.cdd9v5e.mongodb.net/Gamified_Decision?retryWrites=true&w=majority&appName=Cluster0
+
 mongoose
   .connect(
     'mongodb+srv://swativaidya55:teenu1234@cluster0.cdd9v5e.mongodb.net/Gamified_Decision?retryWrites=true&w=majority&appName=Cluster0',

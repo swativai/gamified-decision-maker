@@ -12,7 +12,15 @@
 
 import { Route as rootRoute } from './routes/__root';
 import { Route as SignupImport } from './routes/signup';
+import { Route as RoomsDetailsImport } from './routes/roomsDetails';
+import { Route as LoginImport } from './routes/login';
+import { Route as HomeImport } from './routes/home';
+import { Route as CreateRoomImport } from './routes/createRoom';
+import { Route as RoomRouteImport } from './routes/room/route';
+import { Route as JoinRoomRouteImport } from './routes/joinRoom/route';
 import { Route as IndexImport } from './routes/index';
+import { Route as RoomRoomIdRouteImport } from './routes/room/$roomId/route';
+import { Route as JoinRoomRoomCodeRouteImport } from './routes/joinRoom/$roomCode/route';
 
 // Create/Update Routes
 
@@ -22,10 +30,58 @@ const SignupRoute = SignupImport.update({
   getParentRoute: () => rootRoute,
 } as any);
 
+const RoomsDetailsRoute = RoomsDetailsImport.update({
+  id: '/roomsDetails',
+  path: '/roomsDetails',
+  getParentRoute: () => rootRoute,
+} as any);
+
+const LoginRoute = LoginImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any);
+
+const HomeRoute = HomeImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => rootRoute,
+} as any);
+
+const CreateRoomRoute = CreateRoomImport.update({
+  id: '/createRoom',
+  path: '/createRoom',
+  getParentRoute: () => rootRoute,
+} as any);
+
+const RoomRouteRoute = RoomRouteImport.update({
+  id: '/room',
+  path: '/room',
+  getParentRoute: () => rootRoute,
+} as any);
+
+const JoinRoomRouteRoute = JoinRoomRouteImport.update({
+  id: '/joinRoom',
+  path: '/joinRoom',
+  getParentRoute: () => rootRoute,
+} as any);
+
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
+} as any);
+
+const RoomRoomIdRouteRoute = RoomRoomIdRouteImport.update({
+  id: '/$roomId',
+  path: '/$roomId',
+  getParentRoute: () => RoomRouteRoute,
+} as any);
+
+const JoinRoomRoomCodeRouteRoute = JoinRoomRoomCodeRouteImport.update({
+  id: '/$roomCode',
+  path: '/$roomCode',
+  getParentRoute: () => JoinRoomRouteRoute,
 } as any);
 
 // Populate the FileRoutesByPath interface
@@ -39,6 +95,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport;
       parentRoute: typeof rootRoute;
     };
+    '/joinRoom': {
+      id: '/joinRoom';
+      path: '/joinRoom';
+      fullPath: '/joinRoom';
+      preLoaderRoute: typeof JoinRoomRouteImport;
+      parentRoute: typeof rootRoute;
+    };
+    '/room': {
+      id: '/room';
+      path: '/room';
+      fullPath: '/room';
+      preLoaderRoute: typeof RoomRouteImport;
+      parentRoute: typeof rootRoute;
+    };
+    '/createRoom': {
+      id: '/createRoom';
+      path: '/createRoom';
+      fullPath: '/createRoom';
+      preLoaderRoute: typeof CreateRoomImport;
+      parentRoute: typeof rootRoute;
+    };
+    '/home': {
+      id: '/home';
+      path: '/home';
+      fullPath: '/home';
+      preLoaderRoute: typeof HomeImport;
+      parentRoute: typeof rootRoute;
+    };
+    '/login': {
+      id: '/login';
+      path: '/login';
+      fullPath: '/login';
+      preLoaderRoute: typeof LoginImport;
+      parentRoute: typeof rootRoute;
+    };
+    '/roomsDetails': {
+      id: '/roomsDetails';
+      path: '/roomsDetails';
+      fullPath: '/roomsDetails';
+      preLoaderRoute: typeof RoomsDetailsImport;
+      parentRoute: typeof rootRoute;
+    };
     '/signup': {
       id: '/signup';
       path: '/signup';
@@ -46,43 +144,148 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupImport;
       parentRoute: typeof rootRoute;
     };
+    '/joinRoom/$roomCode': {
+      id: '/joinRoom/$roomCode';
+      path: '/$roomCode';
+      fullPath: '/joinRoom/$roomCode';
+      preLoaderRoute: typeof JoinRoomRoomCodeRouteImport;
+      parentRoute: typeof JoinRoomRouteImport;
+    };
+    '/room/$roomId': {
+      id: '/room/$roomId';
+      path: '/$roomId';
+      fullPath: '/room/$roomId';
+      preLoaderRoute: typeof RoomRoomIdRouteImport;
+      parentRoute: typeof RoomRouteImport;
+    };
   }
 }
 
 // Create and export the route tree
 
+interface JoinRoomRouteRouteChildren {
+  JoinRoomRoomCodeRouteRoute: typeof JoinRoomRoomCodeRouteRoute;
+}
+
+const JoinRoomRouteRouteChildren: JoinRoomRouteRouteChildren = {
+  JoinRoomRoomCodeRouteRoute: JoinRoomRoomCodeRouteRoute,
+};
+
+const JoinRoomRouteRouteWithChildren = JoinRoomRouteRoute._addFileChildren(
+  JoinRoomRouteRouteChildren,
+);
+
+interface RoomRouteRouteChildren {
+  RoomRoomIdRouteRoute: typeof RoomRoomIdRouteRoute;
+}
+
+const RoomRouteRouteChildren: RoomRouteRouteChildren = {
+  RoomRoomIdRouteRoute: RoomRoomIdRouteRoute,
+};
+
+const RoomRouteRouteWithChildren = RoomRouteRoute._addFileChildren(
+  RoomRouteRouteChildren,
+);
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute;
+  '/joinRoom': typeof JoinRoomRouteRouteWithChildren;
+  '/room': typeof RoomRouteRouteWithChildren;
+  '/createRoom': typeof CreateRoomRoute;
+  '/home': typeof HomeRoute;
+  '/login': typeof LoginRoute;
+  '/roomsDetails': typeof RoomsDetailsRoute;
   '/signup': typeof SignupRoute;
+  '/joinRoom/$roomCode': typeof JoinRoomRoomCodeRouteRoute;
+  '/room/$roomId': typeof RoomRoomIdRouteRoute;
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute;
+  '/joinRoom': typeof JoinRoomRouteRouteWithChildren;
+  '/room': typeof RoomRouteRouteWithChildren;
+  '/createRoom': typeof CreateRoomRoute;
+  '/home': typeof HomeRoute;
+  '/login': typeof LoginRoute;
+  '/roomsDetails': typeof RoomsDetailsRoute;
   '/signup': typeof SignupRoute;
+  '/joinRoom/$roomCode': typeof JoinRoomRoomCodeRouteRoute;
+  '/room/$roomId': typeof RoomRoomIdRouteRoute;
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute;
   '/': typeof IndexRoute;
+  '/joinRoom': typeof JoinRoomRouteRouteWithChildren;
+  '/room': typeof RoomRouteRouteWithChildren;
+  '/createRoom': typeof CreateRoomRoute;
+  '/home': typeof HomeRoute;
+  '/login': typeof LoginRoute;
+  '/roomsDetails': typeof RoomsDetailsRoute;
   '/signup': typeof SignupRoute;
+  '/joinRoom/$roomCode': typeof JoinRoomRoomCodeRouteRoute;
+  '/room/$roomId': typeof RoomRoomIdRouteRoute;
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: '/' | '/signup';
+  fullPaths:
+    | '/'
+    | '/joinRoom'
+    | '/room'
+    | '/createRoom'
+    | '/home'
+    | '/login'
+    | '/roomsDetails'
+    | '/signup'
+    | '/joinRoom/$roomCode'
+    | '/room/$roomId';
   fileRoutesByTo: FileRoutesByTo;
-  to: '/' | '/signup';
-  id: '__root__' | '/' | '/signup';
+  to:
+    | '/'
+    | '/joinRoom'
+    | '/room'
+    | '/createRoom'
+    | '/home'
+    | '/login'
+    | '/roomsDetails'
+    | '/signup'
+    | '/joinRoom/$roomCode'
+    | '/room/$roomId';
+  id:
+    | '__root__'
+    | '/'
+    | '/joinRoom'
+    | '/room'
+    | '/createRoom'
+    | '/home'
+    | '/login'
+    | '/roomsDetails'
+    | '/signup'
+    | '/joinRoom/$roomCode'
+    | '/room/$roomId';
   fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
+  JoinRoomRouteRoute: typeof JoinRoomRouteRouteWithChildren;
+  RoomRouteRoute: typeof RoomRouteRouteWithChildren;
+  CreateRoomRoute: typeof CreateRoomRoute;
+  HomeRoute: typeof HomeRoute;
+  LoginRoute: typeof LoginRoute;
+  RoomsDetailsRoute: typeof RoomsDetailsRoute;
   SignupRoute: typeof SignupRoute;
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  JoinRoomRouteRoute: JoinRoomRouteRouteWithChildren,
+  RoomRouteRoute: RoomRouteRouteWithChildren,
+  CreateRoomRoute: CreateRoomRoute,
+  HomeRoute: HomeRoute,
+  LoginRoute: LoginRoute,
+  RoomsDetailsRoute: RoomsDetailsRoute,
   SignupRoute: SignupRoute,
 };
 
@@ -97,14 +300,52 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/joinRoom",
+        "/room",
+        "/createRoom",
+        "/home",
+        "/login",
+        "/roomsDetails",
         "/signup"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
+    "/joinRoom": {
+      "filePath": "joinRoom/route.tsx",
+      "children": [
+        "/joinRoom/$roomCode"
+      ]
+    },
+    "/room": {
+      "filePath": "room/route.tsx",
+      "children": [
+        "/room/$roomId"
+      ]
+    },
+    "/createRoom": {
+      "filePath": "createRoom.tsx"
+    },
+    "/home": {
+      "filePath": "home.tsx"
+    },
+    "/login": {
+      "filePath": "login.tsx"
+    },
+    "/roomsDetails": {
+      "filePath": "roomsDetails.tsx"
+    },
     "/signup": {
       "filePath": "signup.tsx"
+    },
+    "/joinRoom/$roomCode": {
+      "filePath": "joinRoom/$roomCode/route.tsx",
+      "parent": "/joinRoom"
+    },
+    "/room/$roomId": {
+      "filePath": "room/$roomId/route.tsx",
+      "parent": "/room"
     }
   }
 }
