@@ -36,10 +36,6 @@ const roomSchema = new mongoose.Schema({
       joinedAt: { type: Date, default: Date.now },
     },
   ],
-  options: [{ text: String, submittedBy: mongoose.Schema.Types.ObjectId }],
-  votes: [{ optionText: String, votedBy: mongoose.Schema.Types.ObjectId }],
-  finalResult: { type: String },
-  tiebreakerUsed: { type: String },
 });
 
 const Room = new mongoose.model('Room', roomSchema);

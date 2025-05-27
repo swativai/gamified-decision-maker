@@ -27,14 +27,15 @@ export interface Participant {
   joinedAt: string;
 }
 export interface GetRoomParams {
-  roomCode: string;
+  roomId: string;
 }
 
 export const getRoomByIdApi = baseAPI.injectEndpoints({
   endpoints: (build) => ({
-    getRoomById: build.query<Room[], GetRoomParams>({
-      query: (roomCode) => ({
-        url: `/rooms/${roomCode}`,
+    getRoomById: build.query<Room, GetRoomParams>({
+      query: ({ roomId }) => ({
+        url: `/room/${roomId}`,
+        method: 'GET',
       }),
     }),
   }),

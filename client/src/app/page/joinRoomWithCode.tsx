@@ -23,7 +23,7 @@ export const JoinRoomWithCode = () => {
       const res = await joinWithCode({ roomCode }).unwrap();
       console.log('response', res);
 
-      navigate({ to: '/roomsDetails' });
+      navigate({ to: '/room/$roomId', params: { roomId: res.roomId } });
     } catch (err) {
       setError(
         typeof err === 'object' && err !== null && 'message' in err

@@ -9,8 +9,10 @@ const {
   joinRoomFromLink,
   participants,
   getRoomById,
-} = require('../controllers/auth-controller');
-const authenticate = require('../middleware/authenticate');
+  CreateVotingRoom,
+  getVotingRoom,
+} = require('../controllers/auth-controller.cjs');
+const authenticate = require('../middleware/authenticate.cjs');
 const router = express.Router();
 
 router.route('/').get(home);
@@ -29,6 +31,9 @@ router
   .route('/room/join-from-link/:roomCode')
   .post(authenticate, joinRoomFromLink);
 
-router.route('/rooms/:roomId/participants').get(authenticate, participants);
-router.route('/rooms/:roomCode').get(authenticate, getRoomById);
+router.route('/room/:roomId/participants').get(authenticate, participants);
+router.route('/room/:roomId').get(authenticate, getRoomById);
+
+router.route('create/voting_room').post(authenticate, CreateVotingRoom);
+router.route('/get/voting_room').get(authenticate, getVotingRoom);
 module.exports = router;

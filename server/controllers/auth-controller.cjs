@@ -1,6 +1,8 @@
-const Room = require('../models/room');
-const User = require('../models/user');
+const Room = require('../models/room.cjs');
+const User = require('../models/user.cjs');
 const { nanoid } = require('nanoid');
+const mongoose = require('mongoose');
+const { default: Vote } = require('../models/vote.cjs');
 
 const home = async (req, res) => {
   try {
@@ -159,15 +161,15 @@ const joinRoom = async (req, res) => {
   //   email: user.email,
   //   userId: user._id,
   // });
+  if (!alreadyJoined) {
+    room.participants.push({
+      userId,
+      name: username,
+      email,
+    });
 
-  room.participants.push({
-    userId,
-    name: username,
-    email,
-  });
-
-  await room.save();
-
+    await room.save();
+  }
   res.json({
     message: 'Joined successfully',
     roomId: room._id,
@@ -214,9 +216,13 @@ const joinRoomFromLink = async (req, res) => {
 const participants = async (req, res) => {
   const { roomId } = req.params;
   console.log('Room ID from params:', roomId);
+
+  if (!mongoose.Types.ObjectId.isValid(roomId)) {
+    return res.status(400).json({ error: 'Invalid room ID format' });
+  }
+
   try {
     const room = await Room.findById(roomId);
-
     if (!room) {
       return res.status(404).json({ error: 'Room not found' });
     }
@@ -227,7 +233,6 @@ const participants = async (req, res) => {
       email: p.email,
       joinedAt: p.joinedAt,
     }));
-    console.log('Participants:', participants);
 
     res.json({ participants });
   } catch (error) {
@@ -236,25 +241,26 @@ const participants = async (req, res) => {
   }
 };
 
+// Example: server/controllers/auth-controller.js
 const getRoomById = async (req, res) => {
   const { roomId } = req.params;
   console.log('Room ID from params:', roomId);
+  if (!mongoose.Types.ObjectId.isValid(roomId)) {
+    return res.status(400).json({ error: 'Invalid room ID format' });
+  }
 
   try {
-    // Query using roomCode instead of Mongo _id
-    const room = await Room.findOne({ roomCoded: roomId });
-    console.log('Room details:', room);
-
+    const room = await Room.findOne({ _id: roomId });
     if (!room) {
       return res.status(404).json({ message: 'Room not found' });
     }
-
-    res.json(room);
+    res.status(200).json(room);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error', error });
+    console.error('Error fetching room:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 // const getRoomById = async (req, res) => {
 //   const { roomId } = req.params;
 
@@ -271,6 +277,53 @@ const getRoomById = async (req, res) => {
 //   }
 // };
 
+const CreateVotingRoom = async (req, res) => {
+  try {
+    const { title, options, discussion, duration } = req.body;
+    const creatorId = req.user.id;
+
+    const formattedOptions = options.map((opt) => ({ text: opt, votes: [] }));
+
+    // 🧠 Calculate endTime from duration
+    const now = new Date();
+    const totalMs =
+      (duration.days || 0) * 24 * 60 * 60 * 1000 +
+      (duration.hours || 0) * 60 * 60 * 1000 +
+      (duration.minutes || 0) * 60 * 1000;
+    const endTime = new Date(now.getTime() + totalMs);
+
+    const room = new Vote({
+      title,
+      creator: req.user.id,
+      options: formattedOptions,
+      discussion,
+      duration,
+      startTime: now,
+      endTime,
+      creatorId,
+    });
+
+    await room.save();
+    res.status(201).json(room);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const getVotingRoom = async (req, res) => {
+  try {
+    const rooms = await Vote.find()
+      .populate('creator', 'username email') // To get creator info
+      .select('-__v'); // Optional: exclude __v field
+
+    res.status(200).json(rooms);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error while fetching rooms' });
+  }
+};
+
 module.exports = {
   home,
   register,
@@ -281,4 +334,6 @@ module.exports = {
   joinRoomFromLink,
   participants,
   getRoomById,
+  CreateVotingRoom,
+  getVotingRoom,
 };

@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { useLoginUserMutation } from '../../api/loginApi';
 import { useNavigate } from '@tanstack/react-router';
-// import { useNavigate } from '@tanstack/react-router';
 
 export const LoginPage = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [loginUser, { isLoading, error }] = useLoginUserMutation();
-  // const navigate = useNavigate();
+
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

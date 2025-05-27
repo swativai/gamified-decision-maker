@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useGetRoomByIdQuery } from '../../api/get-roomby-id';
+import { useGetParticipantsQuery } from '../../api/get-participants';
 
 export const Room = ({ roomId }: { roomId: string }) => {
   const [gameState, setGameState] = useState('setup'); // setup, voting, results, tie
@@ -8,12 +9,6 @@ export const Room = ({ roomId }: { roomId: string }) => {
   const [duration, setDuration] = useState(5);
   const [timeLeft, setTimeLeft] = useState(0);
   const [votes, setVotes] = useState({});
-  const [participants, setParticipants] = useState([
-    { id: 1, name: 'Alice', voted: false },
-    { id: 2, name: 'Bob', voted: false },
-    { id: 3, name: 'Charlie', voted: false },
-    { id: 4, name: 'Diana', voted: false },
-  ]);
 
   const [selectedOption, setSelectedOption] = useState(null);
   const [showToast, setShowToast] = useState('');
@@ -22,7 +17,15 @@ export const Room = ({ roomId }: { roomId: string }) => {
   const [tieOptions, setTieOptions] = useState([]);
   const [finalResult, setFinalResult] = useState(null);
   const { data } = useGetRoomByIdQuery({ roomId });
-  console.log('Room Data:', data);
+  const { data: participantsData } = useGetParticipantsQuery({
+    roomId,
+    email: '',
+    name: '',
+    userId: '',
+    joinedAt: '',
+  });
+  console.log('Room Data:', data?.roomCode);
+  console.log('Participants data', participantsData);
 
   // Timer effect
   useEffect(() => {
@@ -47,12 +50,12 @@ export const Room = ({ roomId }: { roomId: string }) => {
     if (gameState === 'voting') {
       const interval = setInterval(() => {
         // Simulate random participants voting
-        setParticipants((prev) =>
-          prev.map((p) => ({
-            ...p,
-            voted: Math.random() > 0.7 ? true : p.voted,
-          })),
-        );
+        // setParticipants((prev) =>
+        //   prev.map((p) => ({
+        //     ...p,
+        //     voted: Math.random() > 0.7 ? true : p.voted,
+        //   })),
+        // );
 
         // Simulate vote counts
         const validOptions = options.filter((opt) => opt.trim());
@@ -158,7 +161,6 @@ export const Room = ({ roomId }: { roomId: string }) => {
     setTieOptions([]);
     setFinalResult(null);
     setSpinnerRotation(0);
-    setParticipants((prev) => prev.map((p) => ({ ...p, voted: false })));
   };
 
   const formatTime = (seconds: number) => {
@@ -187,6 +189,8 @@ export const Room = ({ roomId }: { roomId: string }) => {
           <p className='text-blue-200 text-lg'>
             Create fun group decisions with voting and tie-breakers!
           </p>
+          <p>Title :{data?.title || 'Loading...'}</p>
+          <p>Room Code:{data?.roomCode}</p>
         </div>
 
         {/* Setup Phase */}
@@ -326,7 +330,7 @@ export const Room = ({ roomId }: { roomId: string }) => {
                 Participants
               </h3>
               <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-                {participants.map((participant) => (
+                {/* {participantsData?.map((participant) => (
                   <div
                     key={participant.id}
                     className={`p-3 rounded-lg text-center transition-all duration-300 ${
@@ -340,6 +344,9 @@ export const Room = ({ roomId }: { roomId: string }) => {
                     </div>
                     <div className='font-medium'>{participant.name}</div>
                   </div>
+                ))} */}
+                {participantsData?.participants?.map((participant, index) => (
+                  <p key={index}>Name: {participant.name}</p>
                 ))}
               </div>
             </div>
