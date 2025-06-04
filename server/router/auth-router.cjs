@@ -11,6 +11,8 @@ const {
   getRoomById,
   CreateVotingRoom,
   getVotingRoom,
+  voteOnOption,
+  joinVotingRoom,
 } = require('../controllers/auth-controller.cjs');
 const authenticate = require('../middleware/authenticate.cjs');
 const router = express.Router();
@@ -34,6 +36,8 @@ router
 router.route('/room/:roomId/participants').get(authenticate, participants);
 router.route('/room/:roomId').get(authenticate, getRoomById);
 
-router.route('create/voting_room').post(authenticate, CreateVotingRoom);
+router.route('/create/voting_room').post(authenticate, CreateVotingRoom);
 router.route('/get/voting_room').get(authenticate, getVotingRoom);
+router.route(' /vote/:voteId/vote/:optionId').put(authenticate, voteOnOption);
+router.route('/join/:voteId').post(authenticate, joinVotingRoom);
 module.exports = router;

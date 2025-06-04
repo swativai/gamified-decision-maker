@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { Room } from '../../../page/room';
+
+import { CreateVotingPage } from '../../../page/createVotingPage';
 
 export const Route = createFileRoute('/room/$roomId')({
   component: RouteComponent,
@@ -7,5 +8,6 @@ export const Route = createFileRoute('/room/$roomId')({
 
 function RouteComponent() {
   const { roomId } = Route.useParams();
-  return <Room roomId={roomId} />;
+  // return <Room roomId={roomId} />;
+  return <CreateVotingPage roomId={roomId} />; // Assuming CreateVotingPage accepts roomId as a prop
 }

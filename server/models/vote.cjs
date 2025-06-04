@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 
 const optionSchema = new mongoose.Schema({
-  text: String,
+  text: { type: String, required: true },
+  voteCount: { type: Number, default: 0 },
   votes: [
     {
       userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-      timestamp: Date,
+      timestamp: { type: Date, default: Date.now },
     },
   ],
 });
@@ -17,6 +18,7 @@ const votingRoomSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  participants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   options: [optionSchema],
   discussion: { type: String },
 

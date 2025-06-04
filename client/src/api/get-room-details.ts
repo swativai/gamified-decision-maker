@@ -4,7 +4,7 @@ export interface Room {
   _id: string;
   title: string;
   description: string;
-  creatorId: {
+  creator: {
     _id: string;
     username: string;
     email: string;

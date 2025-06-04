@@ -11,61 +11,69 @@ export const CreateNewRoom = () => {
     useCreateRoomMutation();
   const navigate = useNavigate();
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const res = await createRoom({
+        title,
+        description,
+        maxParticipants: Number(maxParticipants),
+        roomId: '',
+        roomCode: '',
+      }).unwrap();
+      console.log('response', res._id);
+      if (res.token) {
+        localStorage.setItem('roomToken', res.token);
+        console.log('Room token saved to localStorage');
+      }
+      alert('Room created!');
+      setTitle('');
+      setDescription('');
+      setMaxParticipants('');
+      setTimeout(() => {
+        // navigate({ to: '/roomsDetails' });
+        navigate({ to: '/room/$roomId', params: { roomId: res._id } });
+      }, 1000); // Navigate after a short delay
+    } catch (err) {
+      console.error('Error:', err);
+    }
+  };
   // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();
+
+  //   const token = localStorage.getItem('token'); // check login status
+
+  //   if (!token) {
+  //     const searchParams = new URLSearchParams({
+  //       from: 'create',
+  //       title,
+  //       description,
+  //       maxParticipants,
+  //     });
+
+  //     navigate({ to: '/login', search: searchParams.toString() });
+  //     return;
+  //   }
+
+  //   // If logged in, continue creating room
   //   try {
   //     await createRoom({
   //       title,
   //       description,
   //       maxParticipants: Number(maxParticipants),
   //     }).unwrap();
+
   //     alert('Room created!');
   //     setTitle('');
   //     setDescription('');
   //     setMaxParticipants('');
   //     setTimeout(() => {
   //       navigate({ to: '/roomsDetails' });
-  //     }, 1000); // Navigate after a short delay
+  //     }, 1000);
   //   } catch (err) {
   //     console.error('Error:', err);
   //   }
   // };
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const token = localStorage.getItem('token'); // check login status
-
-    if (!token) {
-      const searchParams = new URLSearchParams({
-        from: 'create',
-        title,
-        description,
-        maxParticipants,
-      });
-
-      navigate({ to: '/login', search: searchParams.toString() });
-      return;
-    }
-
-    // If logged in, continue creating room
-    try {
-      await createRoom({
-        title,
-        description,
-        maxParticipants: Number(maxParticipants),
-      }).unwrap();
-
-      alert('Room created!');
-      setTitle('');
-      setDescription('');
-      setMaxParticipants('');
-      setTimeout(() => {
-        navigate({ to: '/roomsDetails' });
-      }, 1000);
-    } catch (err) {
-      console.error('Error:', err);
-    }
-  };
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden'>

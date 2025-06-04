@@ -103,7 +103,7 @@ export const DashBord = () => {
           <p className='text-xl text-white/80 mb-12 max-w-lg mx-auto animate-fadeInUp animation-delay-300'>
             Choose your adventure and let the games begin!
           </p>
-
+          <button>Go Back</button>
           {/* Interactive Dice */}
           <div className='flex justify-center mb-16 animate-fadeInUp animation-delay-600'>
             <div className='relative group'>
@@ -183,7 +183,7 @@ export const DashBord = () => {
             <div className='absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 rounded-3xl blur-lg opacity-0 group-hover:opacity-50 transition-opacity duration-300'></div>
           </button>
         </div>
-
+        <button>All Rooms</button>
         {/* Subtitle */}
         <p className='text-white/60 text-lg mt-12 animate-fadeInUp animation-delay-1200'>
           Let the dice decide your fate! 🎯

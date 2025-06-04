@@ -265,12 +265,12 @@ export const SignupPage = () => {
             >
               <p className='text-white/60 text-sm'>
                 Already have an account?{' '}
-                <a
-                  href='#'
-                  className='text-blue-400 hover:text-blue-300 transition-colors duration-200 underline decoration-transparent hover:decoration-current'
+                <button
+                  onClick={() => navigate({ to: '/login' })}
+                  className='text-blue-400 hover:underline'
                 >
-                  Sign in
-                </a>
+                  Signin
+                </button>
               </p>
             </div>
           </div>

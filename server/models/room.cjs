@@ -1,11 +1,16 @@
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const roomSchema = new mongoose.Schema({
   title: { type: String },
   description: { type: String },
-  creatorId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+  creator: {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    name: { type: String },
+    email: { type: String, required: true },
   },
   maxParticipants: {
     type: Number,
@@ -37,6 +42,23 @@ const roomSchema = new mongoose.Schema({
     },
   ],
 });
+roomSchema.methods.generateToken = async function () {
+  try {
+    return jwt.sign(
+      {
+        roomId: this._id.toString(),
+        roomCode: this.roomCode,
+        title: this.title,
+      },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: '30d',
+      },
+    );
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const Room = new mongoose.model('Room', roomSchema);
 module.exports = Room;
